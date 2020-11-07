@@ -1,17 +1,14 @@
 import {useSession} from 'next-auth/client'
 import {useRouter} from "next/router";
-import LoginPage from "../components/LoginPage";
-import {useEffect} from "react";
 
-export default function Login() {
+import LoginPage from "../components/LoginPage";
+import DashboardPage from "../components/DashboardPage";
+
+export default function SPA({darkMode, setDarkMode}) {
     const [session, loading] = useSession();
     const router = useRouter();
 
-    useEffect(() => {
-        if(session) setTimeout(() => {router.push("/dashboard");}, 500);
-    }, [session]);
-
     if (loading) return null;
     if (!loading && !session) return <LoginPage/>;
-    return "Loading..."
+    return <DashboardPage darkMode={darkMode} setDarkMode={setDarkMode}/>;
 }
