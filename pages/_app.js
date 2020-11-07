@@ -1,16 +1,18 @@
 import {Provider} from "next-auth/client";
 import {Grommet} from "grommet";
+import Head from "next/head";
+import {useState} from "react";
 
 const myTheme = {
-    "name": "Hololive Resistance staff panel",
+    "name": "Hololive Resistance - Staff dashboard",
     "rounding": 4,
     "spacing": 24,
     "defaultMode": "dark",
     "global": {
         "colors": {
             "brand": {
-                "dark": "#2200dd",
-                "light": "#0000ff"
+                "dark": "#3377FF",
+                "light": "#3377FF"
             },
             "background": {
                 "dark": "#111111",
@@ -69,7 +71,7 @@ const myTheme = {
             }
         },
         "font": {
-            "family": "Helvetica"
+            "family": "'Noto Sans', sans-serif"
         },
         "active": {
             "background": "active-background",
@@ -98,10 +100,22 @@ const myTheme = {
 }
 
 export default function App({Component, pageProps}) {
+    const [darkMode, setDarkMode] = useState(true);
+
     return (
         <Provider session={pageProps.session}>
-            <Grommet theme={myTheme}>
-                <Component {...pageProps} />
+            <Head>
+                <link href="https://fonts.googleapis.com/css2?family=Noto+Sans&display=swap" rel="stylesheet" />
+                <title>Hololive Resistance Discord - Staff dashboard</title>
+                <meta name="viewport" content="initial-scale=1.0, width=device-width" />
+                <style>{`
+                    * {
+                        font-family: 'Noto Sans', sans-serif;
+                    }
+                `}</style>
+            </Head>
+            <Grommet full theme={myTheme} themeMode={darkMode ? "dark" : "light"}>
+                <Component {...pageProps} darkMode={darkMode} setDarkMode={setDarkMode} />
             </Grommet>
         </Provider>
     )

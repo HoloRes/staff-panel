@@ -1,7 +1,10 @@
-import {Heading} from "grommet";
+import {Box} from "grommet";
+import Navigation from "./Navigation";
 
-export default function DashboardPage() {
+export default function DashboardPage({darkMode, setDarkMode}) {
     return (
-        <Heading margin="none">Logged in!</Heading>
+        <Box fill="vertical">
+            <Navigation darkMode={darkMode} setDarkMode={setDarkMode}/>
+        </Box>
     )
 }
