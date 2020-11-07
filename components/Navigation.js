@@ -1,9 +1,8 @@
 import {useSession, signOut} from "next-auth/client";
-import {Avatar, Box, Button, Header, Image, Menu, Nav, Sidebar, Text} from "grommet";
 import {useState, useEffect} from "react";
-import {Menu as MenuFeather} from "react-feather";
 import {useRouter} from "next/router";
-
+import {Avatar, Box, Button, Header, Image, Menu, Nav, Sidebar, Text} from "grommet";
+import {Menu as MenuFeather, Home as HomeFeather} from "react-feather";
 
 export default function Navigation({darkMode, setDarkMode}) {
     const [session] = useSession();
@@ -43,17 +42,17 @@ export default function Navigation({darkMode, setDarkMode}) {
                 showSidebar ?
                     <Sidebar width="35vh" background="brand"
                              header={<Text align="start" textAlign="center">Hololive Resistance Discord<br/>Staff
-                                 Dashboard</Text>}
+                                 Dashboard<hr/></Text>}
                              footer={<Button height="xxsmall" label={<MenuFeather/>} onClick={changeSidebar}/>}
                     >
-                        <Nav gap="small">
-
+                        <Nav gap="small" align="start" pad="medium">
+                            <Button icon={<HomeFeather/>} label="Dashboard" plain/>
                         </Nav>
                     </Sidebar>
                     :
                     <Sidebar width="xsmall" background="brand"
-                             header={<Image alignSelf="start" src="/img/logo.png" alt="Logo"
-                                            style={{maxWidth: "60px"}}/>}
+                             header={<div><Image alignSelf="start" src="/img/logo.png" alt="Logo"
+                                                 style={{maxWidth: "60px"}}/><hr/></div>}
                              footer={<Button width="xxsmall" label={<MenuFeather/>} onClick={changeSidebar}/>}
                     >
                         <Nav gap="small">

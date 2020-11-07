@@ -1,4 +1,5 @@
 import {Box} from "grommet";
+
 import Navigation from "./Navigation";
 
 export default function DashboardPage({darkMode, setDarkMode}) {
