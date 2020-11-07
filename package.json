@@ -1,0 +1,34 @@
+{
+  "name": "hlresistance-staff",
+  "version": "0.1.0",
+  "private": true,
+  "scripts": {
+    "dev": "next dev",
+    "build": "next build",
+    "start": "next start"
+  },
+  "dependencies": {
+    "babel-plugin-styled-components": "^1.11.1",
+    "grommet": "^2.15.2",
+    "grommet-icons": "^4.5.0",
+    "next": "10.0.1",
+    "next-auth": "^3.1.0",
+    "next-plugin-transpile-modules": "^2.0.0",
+    "react": "17.0.1",
+    "react-dom": "17.0.1",
+    "styled-components": "^5.2.1"
+  },
+  "description": "This is a [Next.js](https://nextjs.org/) project bootstrapped with [`create-next-app`](https://github.com/vercel/next.js/tree/canary/packages/create-next-app).",
+  "main": "index.js",
+  "devDependencies": {},
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/HL-Resistance/staff-panel.git"
+  },
+  "author": "",
+  "license": "UNLICENSED",
+  "bugs": {
+    "url": "https://github.com/HL-Resistance/staff-panel/issues"
+  },
+  "homepage": "https://github.com/HL-Resistance/staff-panel#readme"
+}
