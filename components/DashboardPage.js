@@ -1,7 +1,8 @@
-import {Avatar, Box, Header, Menu} from "grommet";
+import {Avatar, Box, Clock, Header, Menu} from "grommet";
 import {useState, useEffect} from "react";
 import {signOut, useSession} from "next-auth/client";
 import {useRouter} from "next/router";
+import {tz} from "moment-timezone";
 
 import Navigation from "./Navigation";
 import Dashboard from "./Dashboard/Dashboard";
@@ -28,7 +29,7 @@ export default function DashboardPage({darkMode, setDarkMode}) {
     return (
         <div style={{height: "100%"}}>
             <Header style={{float: "right"}}>
-                <Menu icon={false} label={<Box direction="row" gap="small">{session ? session.user.name : ""} <Avatar
+                <Menu icon={false} label={<Box direction="row" gap="small">{session ? <Box>{session.user.name}<br/><Clock type="digital" time={tz("Asia/Tokyo").format()}/></Box> : ""} <Avatar
                     src={session ? session.user.image : ""}/></Box>}
                       items={[{label: "Toggle theme", onClick: changeTheme}, {
                           label: "Logout", onClick: () => {

@@ -1,5 +1,5 @@
 import {useState, useEffect} from "react";
-import {Button, Image, Layer, Nav, Sidebar, Text} from "grommet";
+import {Box, Button, Image, Layer, Nav, Sidebar, Text} from "grommet";
 import {
     Menu as MenuFeather,
     Home as HomeFeather,
@@ -92,8 +92,10 @@ export default function NavigationBar({setCurrentPage}) {
                             window.open("https://docs.google.com/document/d/1LBglncCnvfcTibdrobqOChpDt6AFkabFw-aL2cpneqM/edit?usp=sharing")
                         }}/>
                     </div>
-                    <iframe style={{height: "100%"}}
-                            src="https://docs.google.com/document/d/e/2PACX-1vT_43LUii1r3yPotlhgOzXvhItInd8_j9QrR5LKjpZuONSjk_DC1OcdhQPFQCmJh6Z55aViVVjf8ISP/pub?embedded=true"/>
+                    <Box align="center" fill={true}>
+                        <iframe style={{height: "100%", width: "auto", minWidth: "44vw", display: "block"}}
+                                src="https://docs.google.com/document/d/e/2PACX-1vT_43LUii1r3yPotlhgOzXvhItInd8_j9QrR5LKjpZuONSjk_DC1OcdhQPFQCmJh6Z55aViVVjf8ISP/pub?embedded=true"/>
+                    </Box>
                 </Layer>
             )}
         </div>
