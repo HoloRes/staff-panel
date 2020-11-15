@@ -14,7 +14,7 @@
     "axios": "^0.21.0",
     "babel-plugin-styled-components": "^1.11.1",
     "formik": "^2.2.3",
-    "grommet": "^2.15.2",
+    "grommet": "https://github.com/grommet/grommet/tarball/stable",
     "grommet-icons": "^4.5.0",
     "moment-timezone": "^0.5.31",
     "next": "10.0.1",

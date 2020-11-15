@@ -96,6 +96,9 @@ const myTheme = {
             "dark": "#111111",
             "light": "#FFFFFF"
         }
+    },
+    "tip": {
+        "drop": {}
     }
 }
 

@@ -36,7 +36,7 @@ export default function NavigationBar({setCurrentPage}) {
         <div style={{height: "100%"}}>
             {
                 showSidebar ?
-                    <Sidebar width="30vh" background="brand"
+                    <Sidebar width="15vw" background="brand"
                              header={<Text align="start" textAlign="center">Hololive Resistance Discord<br/>Staff
                                  Dashboard
                                  <hr/>

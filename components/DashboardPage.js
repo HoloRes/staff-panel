@@ -28,7 +28,7 @@ export default function DashboardPage({darkMode, setDarkMode}) {
 
     return (
         <div style={{height: "100%"}}>
-            <Header style={{float: "right"}}>
+            <Header style={{float: "right", height: "8vh"}}>
                 <Menu icon={false} label={<Box direction="row" gap="small">{session ? <Box>{session.user.name}<br/><Clock type="digital" time={tz("Asia/Tokyo").format()}/></Box> : ""} <Avatar
                     src={session ? session.user.image : ""}/></Box>}
                       items={[{label: "Toggle theme", onClick: changeTheme}, {
