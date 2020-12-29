@@ -140,6 +140,19 @@ export default function Dashboard() {
                     </form>
                 </CardBody>
             </Card>
+            <Card width="medium" height="medium" pad={{horizontal: "small", vertical: "none"}}>
+                <Heading level="4" textAlign="center">User notes
+                    <hr style={{color: "#707070", opacity: "25%"}}/>
+                </Heading>
+                <CardBody>
+                    <FormField name="userid" htmlfor="text-input-userid">
+                        <TextInput id="text-input-userid" name="userid" placeholder="User ID"/> {/* TODO: Make controlled */}
+                    </FormField>
+                    <br/>
+                    <Button type="submit" primary label="Search" />
+                    {/* TODO: Search and give popup with notes about user */}
+                </CardBody>
+            </Card>
         </Box>
     )
 }
