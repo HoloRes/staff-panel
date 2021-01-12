@@ -11,7 +11,7 @@
     "@fortawesome/fontawesome-svg-core": "^1.2.32",
     "@fortawesome/free-brands-svg-icons": "^5.15.1",
     "@fortawesome/react-fontawesome": "^0.1.12",
-    "axios": "^0.21.0",
+    "axios": "^0.21.1",
     "babel-plugin-styled-components": "^1.11.1",
     "formik": "^2.2.3",
     "grommet": "https://github.com/grommet/grommet/tarball/stable",
