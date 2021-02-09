@@ -1,4 +1,4 @@
-import {Box, Text} from "grommet";
+import {Box, Text} from 'grommet';
 
 export default function Rules() {
     return (

@@ -1,6 +1,6 @@
-import NextAuth from "next-auth";
-import Providers from "next-auth/providers";
-import axios from "axios";
+import NextAuth from 'next-auth';
+import Providers from 'next-auth/providers';
+import axios from 'axios';
 
 const options = {
     providers: [
@@ -11,7 +11,7 @@ const options = {
     ],
     callbacks: {
         signIn: async (user, account, profile) => {
-            if(process.env.ENVIRONMENT !== "production") return Promise.resolve(true);
+            if(process.env.ENVIRONMENT !== 'production') return Promise.resolve(true);
             axios.get(`${process.env.APIURL}/dash/checkUser/${profile.id}`)
                 .then((res) => {
                     if(res.data === true) return Promise.resolve(true);
