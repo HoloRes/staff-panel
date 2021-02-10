@@ -10,16 +10,17 @@ const options = {
         })
     ],
     callbacks: {
-        signIn: async (user, account, profile) => {
-            if(process.env.ENVIRONMENT !== 'production') return Promise.resolve(true);
-            axios.get(`${process.env.APIURL}/dash/checkUser/${profile.id}`)
-                .then((res) => {
-                    if(res.data === true) return Promise.resolve(true);
-                    else return Promise.resolve(false);
-                })
-                .catch((e) => {
-                    if(e) return Promise.resolve(false);
-                });
+        async signIn (user, account, profile) {
+            const res = await axios.get(`${process.env.APIURL}/dash/checkUser/${profile.id}`, {
+                headers: {
+                    Authorization: process.env.APITOKEN
+                }
+            })
+            .catch(() => {
+                return false;
+            });
+
+            return res.data === true;
         }
     },
     secret: process.env.AUTHSECRET
