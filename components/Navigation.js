@@ -37,7 +37,7 @@ export default function NavigationBar({setCurrentPage}) {
             {
                 showSidebar ?
                     <Sidebar width='15vw' background='brand'
-                             header={<Text align='start' textAlign='center'>Hololive Resistance Discord<br/>Staff
+                             header={<Text align='start' textAlign='center'>Hololive Resort Discord<br/>Staff
                                  Dashboard
                                  <hr/>
                              </Text>}

@@ -1,173 +1,148 @@
-import {Box, Card, DataTable, Tab, Tabs, Text, TextInput} from 'grommet';
+import {Box, DataTable, Text} from 'grommet';
 import {useEffect, useState} from 'react';
 import {Tip} from 'grommet/components/Tip';
-import {Edit3 as Edit3Feather} from 'react-feather';
+import axios from 'axios';
+import {store} from 'react-notifications-component';
 
 export default function StrikeList() {
-    const [strikes, setStrikes] = useState([]);
-    const [bans, setBans] = useState([]);
+	const [strikes, setStrikes] = useState([]);
+	const [userOpen, setUserOpen] = useState(false);
+	const [userId, setUserId] = useState(null);
+	const [offset, setOffset] = useState(0);
+	const [total, setTotal] = useState(null);
 
-    const [currentEdit, setCurrentEdit] = useState('');
-    const [editValue, setEditValue] = useState('');
-    const [editType, setEditType] = useState('');
+	const fetchErrorNotification = {
+		title: 'Error',
+		message: 'Something went wrong during fetching mod logs.',
+		type: 'danger',
+		insert: 'top',
+		container: 'top-right',
+		animationIn: ['animate__animated', 'animate__fadeIn'],
+		animationOut: ['animate__animated', 'animate__fadeOut'],
+		dismiss: {
+			duration: 5000,
+			onScreen: true
+		}
+	}
 
-    const dateOptions = {year: 'numeric', month: 'long', day: 'numeric'}
+	const dateOptions = {year: 'numeric', month: 'long', day: 'numeric'}
 
-    useEffect(() => {
-        setBans([
-            {
-                _id: 'a7892ojohulakjaose',
-                username: 'BannedUser#0000',
-                userId: '0000123456',
-                totalStrikes: 3,
-                totalCaseIds: [5, 6, 7],
-                date: new Date(2020, 5, 10),
-                notes: 'Rule 4 and 10'
-            }
-        ]);
+	useEffect(() => {
+		async function run() {
+			const res = axios.get('/api/modlogs', {
+				params: {
+					offset,
+					count: 50
+				}
+			}).catch((e) => {
+				store.addNotification(fetchErrorNotification);
+				console.error(e);
+			});
 
-        setStrikes([
-            {
-                _id: 'aljfay893jouya9',
-                username: 'SomeUser#0000',
-                userId: '12345600000',
-                activeStrikes: 2,
-                totalStrikes: 3,
-                activeCaseIds: [3, 4],
-                totalCaseIds: [1, 3, 4],
-                lastStrikeDate: new Date(Date.UTC(2020, 9, 19)),
-                strikeExpiration: new Date(Date.UTC(2020, 10, 17)),
-                notes: 'Rule 4 and 10'
-            },
-            {
-                _id: 'jaljdfo7934jnoh98hailaf',
-                username: 'SomeoneElse#0000',
-                userId: '12345600001',
-                activeStrikes: 0,
-                totalStrikes: 1,
-                activeCaseIds: [],
-                totalCaseIds: [2],
-                lastStrikeDate: new Date(Date.UTC(2020, 7, 12)),
-                strikeExpiration: 'N/A',
-                notes: 'Rule 2'
-            }
-        ]);
-    }, []);
+			setTotal(res.data.count);
+			setOffset(offset + 50);
+			setStrikes(res.data.logs)
+		}
 
-    function searchStrike() {
+		run();
+	}, []);
 
-    }
+	async function onMore() {
+		if (total - offset < 50) {
+			if (total - offset > 0) {
+				const res = await axios.get('/api/modlogs', {
+					params: {
+						count: total - offset,
+						offset
+					}
+				}).catch((e) => {
+					store.addNotification(fetchErrorNotification);
+					console.error(e);
+				});
 
-    function searchBan() {
+				setOffset(offset + 50);
+				setStrikes([
+					...strikes,
+					...res.data.logs
+				]);
+			} else return;
+		} else {
+			const res = await axios.get('/api/modlogs', {
+				params: {
+					count: total,
+					offset
+				}
+			}).catch((e) => {
+				store.addNotification(fetchErrorNotification);
+				console.error(e);
+			});
 
-    }
-
-    function handleReasonUpdate(event) {
-        event.preventDefault();
-
-        if (editType === 'bans') {
-            const newLog = bans.map((item) => {
-                let temp = Object.assign({}, item);
-                if (temp._id === currentEdit) {
-                    temp.notes = editValue;
-                }
-                return temp;
-            });
-            setBans(newLog);
-
-            setCurrentEdit('');
-            setEditValue('');
-        } else if (editType === 'strikes') {
-            const newLog = strikes.map((item) => {
-                let temp = Object.assign({}, item);
-                if (temp._id === currentEdit) {
-                    temp.notes = editValue;
-                }
-                return temp;
-            });
-            setStrikes(newLog);
-
-            setCurrentEdit('');
-            setEditValue('');
-        }
-    }
+			setOffset(offset + 50);
+			setStrikes([
+				...strikes,
+				...res.data.logs
+			]);
+		}
+	}
 
 
-    return (
-        <Box pad={{horizontal: 'small'}}>
-            <Card height='large' width='xxlarge'>
-                <DataTable fill='horizontal' pad='small' data={strikes}
-                           columns={[
-                               {
-                                   property: 'username',
-                                   header: <Text>User</Text>,
-                                   render: datum => (
-                                       <Tip dropProps={{align: {top: 'right'}}} content={
-                                           <Box pad='small' gap='small' width={{max: 'small'}} round='small'
-                                                background='background-back' plain>
-                                               <Text>User ID: {datum.userId}</Text>
-                                           </Box>
-                                       }>
-                                           <Text>{datum.username}</Text>
-                                       </Tip>
-                                   ),
-                                   primary: true
-                               },
-                               {
-                                   property: 'activeStrikes',
-                                   header: <Text>Active strikes</Text>,
-                                   render: datum => (
-                                       <Tip dropProps={{align: {top: 'right'}}} content={
-                                           <Box pad='small' gap='small' width={{max: 'small'}} round='small'
-                                                background='background-back' plain>
-                                               <Text>Case
-                                                   ID's: {datum.activeCaseIds.length === 0 ? 'None' : datum.activeCaseIds.join(', ')}</Text>
-                                           </Box>
-                                       }>
-                                           <Text>{datum.activeStrikes}</Text>
-                                       </Tip>
-                                   )
-                               },
-                               {
-                                   property: 'lastStrikeDate',
-                                   header: <Text>Last strike issued date</Text>,
-                                   render: datum => {
-                                       const date = datum.lastStrikeDate.toLocaleDateString('en-US', dateOptions).split(',');
-                                       date[0] = `${date[0]}th`
-                                       const newDateString = date.join(', ');
-                                       return <Text>{newDateString}</Text>;
-                                   }
-                               },
-                               {
-                                   property: 'strikeExpiration',
-                                   header: <Text>When next strike expires</Text>,
-                                   render: datum => {
-                                       if (datum.strikeExpiration instanceof Date) {
-                                           const date = datum.strikeExpiration.toLocaleDateString('en-US', dateOptions).split(',');
-                                           date[0] = `${date[0]}th`
-                                           const newDateString = date.join(', ');
-                                           return <Text>{newDateString}</Text>;
-                                       } else return <Text>{datum.strikeExpiration}</Text>;
-                                   }
-                               },
-                               {
-                                   property: 'totalStrikes',
-                                   header: <Text>Total strikes</Text>,
-                                   render: datum => (
-                                       <Tip dropProps={{align: {top: 'right'}}} content={
-                                           <Box pad='small' gap='small' width={{max: 'small'}} round='small'
-                                                background='background-back' plain>
-                                               <Text>Case
-                                                   ID's: {datum.totalStrikes.length === 0 ? 'None' : datum.totalCaseIds.join(', ')}</Text>
-                                           </Box>
-                                       }>
-                                           <Text>{datum.totalStrikes}</Text>
-                                       </Tip>
-                                   )
-                               },
-                           ]}
-                />
-            </Card>
-        </Box>
-    )
+	return (
+		<Box pad={{horizontal: 'small'}}>
+			<DataTable fill='horizontal' pad='small' data={strikes} replace={true} onMore={() => onMore()}
+					   columns={[
+						   {
+							   property: 'username',
+							   header: <Text>User</Text>,
+							   render: datum => (
+								   <Tip dropProps={{align: {top: 'right'}}} content={
+									   <Box pad='small' gap='small' width={{max: 'small'}} round='small'
+											background='background-back' plain>
+										   <Text>User ID: {datum.userId}</Text>
+									   </Box>
+								   }>
+									   <Text>{datum.offender}</Text>
+								   </Tip>
+							   ),
+							   primary: true
+						   },
+						   {
+							   property: 'activeStrikes',
+							   header: <Text>Active strikes</Text>,
+							   render: datum => (
+								   <Text>{datum.activeStrikes}</Text>
+							   )
+						   },
+						   {
+							   property: 'lastStrikeDate',
+							   header: <Text>Last strike issued date</Text>,
+							   render: datum => {
+								   const date = datum.lastStrikeDate.toLocaleDateString('en-US', dateOptions).split(',');
+								   date[0] = `${date[0]}th`
+								   const newDateString = date.join(', ');
+								   return <Text>{newDateString}</Text>;
+							   }
+						   },
+						   {
+							   property: 'strikeExpiration',
+							   header: <Text>When next strike expires</Text>,
+							   render: datum => {
+								   if (datum.strikeExpiration instanceof Date) {
+									   const date = datum.strikeExpiration.toLocaleDateString('en-US', dateOptions).split(',');
+									   date[0] = `${date[0]}th`
+									   const newDateString = date.join(', ');
+									   return <Text>{newDateString}</Text>;
+								   } else return <Text>{datum.strikeExpiration}</Text>;
+							   }
+						   },
+						   {
+							   property: 'totalStrikes',
+							   header: <Text>Total strikes</Text>,
+							   render: datum => (
+								   <Text>{datum.totalStrikes}</Text>
+							   )
+						   },
+					   ]}
+			/>
+		</Box>
+	)
 }

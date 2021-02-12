@@ -2,10 +2,15 @@ import { getSession }  from 'next-auth/client';
 import axios from 'axios';
 
 export default async (req, res) => {
+	if (req.method !== 'GET') return res.status(400).end();
 	const session = await getSession({ req });
 	if (session) {
-		axios.get(`${process.env.APIURL}`)
-		res.status(200);
-	} else res.status(401);
-	res.end()
+		const result = await axios.get(`${process.env.APIURL}/modlogs`, {
+			headers: {
+				Authorization: process.env.APITOKEN
+			},
+			params: req.query,
+		}).catch((err) => res.status(err.response.status).json(err.response.data));
+		res.status(200).json(result.data);
+	} else res.status(401).end();
 }

@@ -11,7 +11,7 @@ const options = {
     ],
     callbacks: {
         async signIn (user, account, profile) {
-            const res = await axios.get(`${process.env.APIURL}/dash/checkUser/${profile.id}`, {
+            const res = await axios.get(`${process.env.APIURL}/checkUser/${profile.id}`, {
                 headers: {
                     Authorization: process.env.APITOKEN
                 }
@@ -21,7 +21,7 @@ const options = {
             });
 
             return res.data === true;
-        }
+        },
     },
     secret: process.env.AUTHSECRET
 }

@@ -1,5 +1,9 @@
+import 'react-notifications-component/dist/theme.css'
+import 'animate.css/animate.min.css';
+
 import {Provider} from 'next-auth/client';
 import {Grommet} from 'grommet';
+import ReactNotification from 'react-notifications-component'
 import Head from 'next/head';
 import {useState} from 'react';
 
@@ -118,6 +122,7 @@ export default function App({Component, pageProps}) {
                 `}</style>
             </Head>
             <Grommet full theme={myTheme} themeMode={darkMode ? 'dark' : 'light'}>
+                <ReactNotification />
                 <Component {...pageProps} darkMode={darkMode} setDarkMode={setDarkMode} />
             </Grommet>
         </Provider>
