@@ -48,12 +48,12 @@ export default function NavigationBar({setCurrentPage}) {
                                     onClick={() => setCurrentPage(<Dashboard/>)}/>
                             <Button icon={<ListFeather size={30}/>} label='Strike list' plain
                                     onClick={() => setCurrentPage(<StrikeList/>)}/>
-                            <Button icon={<svg xmlns='http://www.w3.org/2000/svg' width='30.849' height='30.849'
+                            {/*<Button icon={<svg xmlns='http://www.w3.org/2000/svg' width='30.849' height='30.849'
                                                viewBox='0 0 30.849 30.849'>
                                 <path id='Icon_metro-hammer' data-name='Icon metro-hammer'
                                       d='M33,29.515,16.475,14.469l.769-.771a3.528,3.528,0,0,0,1.022-2.278c.03-.014.06-.027.089-.043l3.1-1.94A1.305,1.305,0,0,0,21.389,7.7l-5.4-5.411a1.3,1.3,0,0,0-1.728-.069L12.33,5.336c-.016.029-.03.059-.043.09A3.509,3.509,0,0,0,10.015,6.45L7.08,9.393a3.527,3.527,0,0,0-1.022,2.278c-.03.014-.06.028-.089.044l-3.1,1.94a1.305,1.305,0,0,0,.069,1.732l5.4,5.411a1.3,1.3,0,0,0,1.728.069l1.935-3.111c.016-.029.03-.059.043-.089a3.509,3.509,0,0,0,2.271-1.024l.852-.855L30.167,32.359a1.035,1.035,0,0,0,1.49.172l1.517-1.521A1.042,1.042,0,0,0,33,29.515Z'
                                       transform='translate(-2.571 -1.928)' fill='#fff'/>
-                            </svg>} label='Modlog' plain onClick={() => setCurrentPage(<ModLog/>)}/>
+                            </svg>} label='Modlog' plain onClick={() => setCurrentPage(<ModLog/>)}/>*/}
                             <Button icon={<BookOpenFeather size={30}/>} label='Rules' plain
                                     onClick={() => setCurrentPage(<Rules/>)}/>
                             <Button icon={<ShieldFeather size={30}/>} label='Guide' plain
@@ -73,12 +73,12 @@ export default function NavigationBar({setCurrentPage}) {
                         <Nav gap='small'>
                             <Button icon={<HomeFeather size={47}/>} onClick={() => setCurrentPage(<Dashboard/>)}/>
                             <Button icon={<ListFeather size={47}/>} onClick={() => setCurrentPage(<StrikeList/>)}/>
-                            <Button icon={<svg xmlns='http://www.w3.org/2000/svg' width='30.849' height='30.849'
+                            {/*<Button icon={<svg xmlns='http://www.w3.org/2000/svg' width='30.849' height='30.849'
                                                viewBox='0 0 30.849 30.849' style={{width: '2.2vw', height: 'auto'}}>
                                 <path id='Icon_metro-hammer' data-name='Icon metro-hammer'
                                       d='M33,29.515,16.475,14.469l.769-.771a3.528,3.528,0,0,0,1.022-2.278c.03-.014.06-.027.089-.043l3.1-1.94A1.305,1.305,0,0,0,21.389,7.7l-5.4-5.411a1.3,1.3,0,0,0-1.728-.069L12.33,5.336c-.016.029-.03.059-.043.09A3.509,3.509,0,0,0,10.015,6.45L7.08,9.393a3.527,3.527,0,0,0-1.022,2.278c-.03.014-.06.028-.089.044l-3.1,1.94a1.305,1.305,0,0,0,.069,1.732l5.4,5.411a1.3,1.3,0,0,0,1.728.069l1.935-3.111c.016-.029.03-.059.043-.089a3.509,3.509,0,0,0,2.271-1.024l.852-.855L30.167,32.359a1.035,1.035,0,0,0,1.49.172l1.517-1.521A1.042,1.042,0,0,0,33,29.515Z'
                                       transform='translate(-2.571 -1.928)' fill='#fff'/>
-                            </svg>} onClick={() => setCurrentPage(<ModLog/>)}/>
+                            </svg>} onClick={() => setCurrentPage(<ModLog/>)}/>*/}
                             <Button icon={<BookOpenFeather size={47}/>} onClick={() => setCurrentPage(<Rules/>)}/>
                             <Button icon={<ShieldFeather size={47}/>} onClick={() => setShowGuide(true)}/>
                         </Nav>
