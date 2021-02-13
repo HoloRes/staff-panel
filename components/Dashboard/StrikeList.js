@@ -1,11 +1,12 @@
-import {Box, DataTable, Text} from 'grommet';
+import {Box, DataTable, Layer, Text} from 'grommet';
 import {useEffect, useState} from 'react';
 import {Tip} from 'grommet/components/Tip';
 import axios from 'axios';
 import {store} from 'react-notifications-component';
+import UserInfo from "./UserInfo";
 
 export default function StrikeList() {
-	const [strikes, setStrikes] = useState([]);
+	const [users, setUsers] = useState([]);
 	const [userOpen, setUserOpen] = useState(false);
 	const [userId, setUserId] = useState(null);
 	const [offset, setOffset] = useState(0);
@@ -29,7 +30,7 @@ export default function StrikeList() {
 
 	useEffect(() => {
 		async function run() {
-			const res = axios.get('/api/modlogs', {
+			const res = await axios.get('/api/users', {
 				params: {
 					offset,
 					count: 50
@@ -41,7 +42,7 @@ export default function StrikeList() {
 
 			setTotal(res.data.count);
 			setOffset(offset + 50);
-			setStrikes(res.data.logs)
+			setUsers(res.data.users)
 		}
 
 		run();
@@ -50,7 +51,7 @@ export default function StrikeList() {
 	async function onMore() {
 		if (total - offset < 50) {
 			if (total - offset > 0) {
-				const res = await axios.get('/api/modlogs', {
+				const res = await axios.get('/api/users', {
 					params: {
 						count: total - offset,
 						offset
@@ -63,11 +64,11 @@ export default function StrikeList() {
 				setOffset(offset + 50);
 				setStrikes([
 					...strikes,
-					...res.data.logs
+					...res.data.users
 				]);
 			} else return;
 		} else {
-			const res = await axios.get('/api/modlogs', {
+			const res = await axios.get('/api/users', {
 				params: {
 					count: total,
 					offset
@@ -78,30 +79,36 @@ export default function StrikeList() {
 			});
 
 			setOffset(offset + 50);
-			setStrikes([
-				...strikes,
-				...res.data.logs
+			setUsers([
+				...users,
+				...res.data.users
 			]);
 		}
 	}
 
 
 	return (
+		<>
 		<Box pad={{horizontal: 'small'}}>
-			<DataTable fill='horizontal' pad='small' data={strikes} replace={true} onMore={() => onMore()}
+			<DataTable fill='horizontal' pad='small' data={users} replace={true} onMore={() => onMore()}
 					   columns={[
 						   {
 							   property: 'username',
 							   header: <Text>User</Text>,
 							   render: datum => (
+							   	<div style={{cursor: 'pointer'}} onClick={() => {
+							   		setUserId(datum.userData._id);
+							   		setUserOpen(true);
+								}}>
 								   <Tip dropProps={{align: {top: 'right'}}} content={
 									   <Box pad='small' gap='small' width={{max: 'small'}} round='small'
 											background='background-back' plain>
-										   <Text>User ID: {datum.userId}</Text>
+										   <Text>User ID: {datum.userData._id}</Text>
 									   </Box>
 								   }>
-									   <Text>{datum.offender}</Text>
+									   <Text>{datum.userData.lastKnownTag}</Text>
 								   </Tip>
+								</div>
 							   ),
 							   primary: true
 						   },
@@ -116,33 +123,41 @@ export default function StrikeList() {
 							   property: 'lastStrikeDate',
 							   header: <Text>Last strike issued date</Text>,
 							   render: datum => {
-								   const date = datum.lastStrikeDate.toLocaleDateString('en-US', dateOptions).split(',');
-								   date[0] = `${date[0]}th`
-								   const newDateString = date.join(', ');
-								   return <Text>{newDateString}</Text>;
+							   		if(datum.lastStrikeDate) {
+										const date = new Date(datum.lastStrikeDate).toLocaleDateString('en-US', dateOptions).split(',')
+										date[0] = `${date[0]}th`
+										const newDateString = date.join(', ');
+										return <Text>{newDateString}</Text>;
+									} else return <Text>Never</Text>
 							   }
 						   },
 						   {
 							   property: 'strikeExpiration',
 							   header: <Text>When next strike expires</Text>,
 							   render: datum => {
-								   if (datum.strikeExpiration instanceof Date) {
-									   const date = datum.strikeExpiration.toLocaleDateString('en-US', dateOptions).split(',');
+								   if (datum.strikeExpiration) {
+									   const date = new Date(datum.strikeExpiration).toLocaleDateString('en-US', dateOptions).split(',');
 									   date[0] = `${date[0]}th`
 									   const newDateString = date.join(', ');
 									   return <Text>{newDateString}</Text>;
-								   } else return <Text>{datum.strikeExpiration}</Text>;
+								   } else return <Text>None</Text>;
 							   }
 						   },
 						   {
 							   property: 'totalStrikes',
 							   header: <Text>Total strikes</Text>,
 							   render: datum => (
-								   <Text>{datum.totalStrikes}</Text>
+								   <Text>{datum.strikes}</Text>
 							   )
 						   },
 					   ]}
 			/>
 		</Box>
+			{userOpen && (
+				<Layer onEsc={() => setUserOpen(false)} onClickOutside={() => setUserOpen(false)} full={true}>
+					<UserInfo userid={userId}/>
+				</Layer>
+			)}
+		</>
 	)
 }

@@ -1,4 +1,4 @@
-import {Box, Button, Card, CardBody, FormField, Heading, Select, Text, TextArea, TextInput} from 'grommet';
+import {Box, Button, Card, CardBody, FormField, Heading, Layer, Select, Text, TextArea, TextInput} from 'grommet';
 import axios from 'axios';
 import io from 'socket.io-client';
 import parseDuration from 'parse-duration';
@@ -6,11 +6,15 @@ import {useEffect, useState} from 'react';
 import {useFormik} from 'formik';
 import {store} from 'react-notifications-component';
 import {useSession} from 'next-auth/client';
+import UserInfo from "./UserInfo";
 
 export default function Dashboard() {
 	const [modLog, setModLog] = useState([]);
 	const [modFormSent, setModFormSent] = useState(false);
 	const [session] = useSession();
+	const [userOpen, setUserOpen] = useState(false);
+	const [userId, setUserId] = useState(null);
+	const [userIdValid, setUserIdValid] = useState(false);
 
 	const socket = io('http://localhost:3001', {
 		auth: {
@@ -52,6 +56,12 @@ export default function Dashboard() {
 		</div>)
 		setModLog(newModlogs);
 	});
+
+	useEffect(() => {
+		console.log(userId)
+		setUserIdValid(!(/^[0-9]{18}$/g.test(userId)));
+		console.log(userIdValid)
+	}, [userId]);
 
 	useEffect(() => {
 		axios.get(`/api/modlogs`, {
@@ -116,7 +126,6 @@ export default function Dashboard() {
 		if (!values.reason) errors.reason = 'Required';
 		if (!values.type) errors.type = 'Required';
 
-		// * Temporary user id check, needs to be replaced with an API call to get member details
 		const valid = /^[0-9]{18}$/g.test(values.userid);
 		if (!valid) errors.userid = 'Invalid user id';
 
@@ -181,7 +190,7 @@ export default function Dashboard() {
 						}
 					}
 
-					if(res?.data?.info) store.addNotification({
+					if (res?.data?.info) store.addNotification({
 						...notification,
 						message: res.data.info,
 					});
@@ -195,88 +204,96 @@ export default function Dashboard() {
 	});
 
 	return (
-		<Box pad={{vertical: 'small', horizontal: 'medium'}} direction='row' gap='large'>
-			<Card width='medium' height='60vh' pad={{horizontal: 'small', vertical: 'none'}}>
-				<Heading level='4' textAlign='center'>Modlog
-					<hr style={{color: '#707070', opacity: '25%'}}/>
-				</Heading>
-				<CardBody>
-					{modLog}
-				</CardBody>
-			</Card>
-			<Card width='large' height='60vh' pad={{horizontal: 'small', vertical: 'none'}}>
-				<Heading level='4' style={{maxWidth: '100%'}} textAlign='center'>Strike user
-					<hr style={{color: '#707070', opacity: '25%'}}/>
-				</Heading>
-				<CardBody>
-					<form onSubmit={formik.handleSubmit}>
-						<Box direction='row' gap='xlarge'>
-							<Box>
-								<FormField name='userid' htmlfor='text-input-userid' label='User'
-										   disabled={modFormSent}>
-									<TextInput id='text-input-userid' name='userid' value={formik.values.userid}
-											   onChange={formik.handleChange} onBlur={formik.handleBlur}
-											   placeholder='User ID' disabled={modFormSent}/>
-								</FormField>
-								{(formik.errors.userid && formik.touched.userid) &&
-								<Text color='status-critical'>{formik.errors.userid}</Text>}
+		<>
+			<Box pad={{vertical: 'small', horizontal: 'medium'}} direction='row' gap='large'>
+				<Card width='medium' height='60vh' pad={{horizontal: 'small', vertical: 'none'}}>
+					<Heading level='4' textAlign='center'>Modlog
+						<hr style={{color: '#707070', opacity: '25%'}}/>
+					</Heading>
+					<CardBody>
+						{modLog}
+					</CardBody>
+				</Card>
+				<Card width='large' height='60vh' pad={{horizontal: 'small', vertical: 'none'}}>
+					<Heading level='4' style={{maxWidth: '100%'}} textAlign='center'>Strike user
+						<hr style={{color: '#707070', opacity: '25%'}}/>
+					</Heading>
+					<CardBody>
+						<form onSubmit={formik.handleSubmit}>
+							<Box direction='row' gap='xlarge'>
+								<Box>
+									<FormField name='userid' htmlfor='text-input-userid' label='User'
+											   disabled={modFormSent}>
+										<TextInput id='text-input-userid' name='userid' value={formik.values.userid}
+												   onChange={formik.handleChange} onBlur={formik.handleBlur}
+												   placeholder='User ID' disabled={modFormSent}/>
+									</FormField>
+									{(formik.errors.userid && formik.touched.userid) &&
+									<Text color='status-critical'>{formik.errors.userid}</Text>}
 
-								<FormField name='type' htmlfor='dropdown-input-type' label='Type' required
-										   disabled={modFormSent}>
-									<Select id='dropdown-input-type' name='type'
-											options={['Strike', 'Warn', 'Mute', 'Kick', 'Ban']}
-											value={formik.values.type} onChange={({value}) => {
-										formik.setFieldValue('type', value);
-										formik.setFieldTouched('type', true);
-									}} onBlur={formik.handleBlur} disabled={modFormSent}/>
-								</FormField>
-								{(formik.errors.type && formik.touched.type) &&
-								<Text color='status-critical'>{formik.errors.type}</Text>}
-								{
-									formik.values.type && formik.values.type === 'Mute' ?
-										<>
-											<FormField name='duration' htmlfor='text-input-duration' label='Duration'
-													   required disabled={modFormSent}>
-												<TextInput id='text-input-duration' name='duration'
-														   value={formik.values.duration} onChange={formik.handleChange}
-														   onBlur={formik.handleBlur} disabled={modFormSent}/>
-											</FormField>
-											{(formik.errors.duration && formik.touched.duration) &&
-											<Text color='status-critical'>{formik.errors.duration}</Text>}
-										</> : null
-								}
-							</Box>
-							<Box>
-								<FormField name='reason' htmlfor='text-input-reason' label='Reason' required
-										   disabled={modFormSent}>
-									<TextArea id='text-input-reason' name='reason' placeholder='Give a reason'
-											  resize={false} style={{height: '350px', width: '385px'}}
-											  value={formik.values.reason} onChange={formik.handleChange}
-											  onBlur={formik.handleBlur} disabled={modFormSent}/>
-								</FormField>
-								{(formik.errors.reason && formik.touched.reason) &&
-								<Text color='status-critical'>{formik.errors.reason}</Text>}
+									<FormField name='type' htmlfor='dropdown-input-type' label='Type' required
+											   disabled={modFormSent}>
+										<Select id='dropdown-input-type' name='type'
+												options={['Strike', 'Warn', 'Mute', 'Kick', 'Ban']}
+												value={formik.values.type} onChange={({value}) => {
+											formik.setFieldValue('type', value);
+											formik.setFieldTouched('type', true);
+										}} onBlur={formik.handleBlur} disabled={modFormSent}/>
+									</FormField>
+									{(formik.errors.type && formik.touched.type) &&
+									<Text color='status-critical'>{formik.errors.type}</Text>}
+									{
+										formik.values.type && formik.values.type === 'Mute' ?
+											<>
+												<FormField name='duration' htmlfor='text-input-duration'
+														   label='Duration'
+														   required disabled={modFormSent}>
+													<TextInput id='text-input-duration' name='duration'
+															   value={formik.values.duration}
+															   onChange={formik.handleChange}
+															   onBlur={formik.handleBlur} disabled={modFormSent}/>
+												</FormField>
+												{(formik.errors.duration && formik.touched.duration) &&
+												<Text color='status-critical'>{formik.errors.duration}</Text>}
+											</> : null
+									}
+								</Box>
+								<Box>
+									<FormField name='reason' htmlfor='text-input-reason' label='Reason' required
+											   disabled={modFormSent}>
+										<TextArea id='text-input-reason' name='reason' placeholder='Give a reason'
+												  resize={false} style={{height: '350px', width: '385px'}}
+												  value={formik.values.reason} onChange={formik.handleChange}
+												  onBlur={formik.handleBlur} disabled={modFormSent}/>
+									</FormField>
+									{(formik.errors.reason && formik.touched.reason) &&
+									<Text color='status-critical'>{formik.errors.reason}</Text>}
 
-								<Button type='submit' primary label='Submit' disabled={modFormSent}/>
+									<Button type='submit' primary label='Submit' disabled={modFormSent}/>
+								</Box>
 							</Box>
-						</Box>
-					</form>
-				</CardBody>
-			</Card>
-			<Card width='medium' height='medium' pad={{horizontal: 'small', vertical: 'none'}}>
-				<Heading level='4' textAlign='center'>User notes
-					<hr style={{color: '#707070', opacity: '25%'}}/>
-				</Heading>
-				<CardBody>
-					<FormField name='userid' htmlfor='text-input-userid'>
-						<TextInput id='text-input-userid' name='userid'
-								   placeholder='User ID'/> {/* TODO: Make controlled */}
-					</FormField>
-					<br/>
-					<Button type='submit' primary label='Search'/>
-					{/* TODO: Search and give popup with notes about user */}
-				</CardBody>
-			</Card>
-		</Box>
+						</form>
+					</CardBody>
+				</Card>
+				<Card width='medium' height='medium' pad={{horizontal: 'small', vertical: 'none'}}>
+					<Heading level='4' textAlign='center'>User notes
+						<hr style={{color: '#707070', opacity: '25%'}}/>
+					</Heading>
+					<CardBody>
+						<FormField name='userid' htmlfor='text-input-userid'>
+							<TextInput id='text-input-userid' name='userid'
+									   placeholder='User ID' value={userId} onChange={(event) => setUserId(event.target.value)}/>
+						</FormField>
+						<br/>
+						<Button type='submit' primary label='Search' onClick={() => setUserOpen(true)} disabled={userIdValid}/>
+					</CardBody>
+				</Card>
+			</Box>
+			{userOpen && (
+				<Layer onEsc={() => setUserOpen(false)} onClickOutside={() => setUserOpen(false)} full={true}>
+					<UserInfo userid={userId}/>
+				</Layer>
+			)}
+		</>
 	)
 }
