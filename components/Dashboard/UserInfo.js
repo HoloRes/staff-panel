@@ -31,7 +31,7 @@ export default function UserInfo({userid}) {
 					console.error(e);
 				});
 
-			const {data: modLogs} = await axios.get(`/api/modlogs/?q=${userid}&count=50`)
+			const {data: modLogs} = await axios.get(`/api/modlogs/?userid=${userid}&count=50`)
 				.catch((e) => {
 					const res = e.response;
 					store.addNotification({
