@@ -23,6 +23,9 @@ const options = {
             return res.data === true;
         },
     },
+    jwt: {
+        signingKey: process.env.JWT_SIGNING_PRIVATE_KEY,
+    },
     secret: process.env.AUTHSECRET
 }
 
