@@ -16,9 +16,9 @@ export default function Dashboard() {
 	const [userId, setUserId] = useState(null);
 	const [userIdValid, setUserIdValid] = useState(false);
 
-	const socket = io('http://localhost:3001', {
+	const socket = io('https://suisei.hlresort.community', {
 		auth: {
-			token: 'A6244*&6^n3mfyquEnsAVG!kP$rBmX!$aeaLjyxc63DPovYg2B'
+			token: 'XAMvfPPgLBYCrQvAhXokpR2kWC7GSUQNYyjePLk285WXwjrtTc'
 		}
 	});
 
