@@ -8,11 +8,21 @@ import Head from 'next/head';
 import {useState} from 'react';
 
 import * as Sentry from '@sentry/node';
+import { Integrations } from "@sentry/tracing";
 
 if (process.env.NEXT_PUBLIC_SENTRY_DSN) {
     Sentry.init({
         enabled: process.env.NODE_ENV === 'production',
-        dsn: process.env.NEXT_PUBLIC_SENTRY_DSN
+        dsn: process.env.NEXT_PUBLIC_SENTRY_DSN,
+        integrations: [new Integrations.BrowserTracing()],
+        tracesSampleRate: 1.0,
+        beforeSend(event, hint) {
+            // Check if it is an exception, and if so, show the report dialog
+            if (event.exception) {
+                Sentry.showReportDialog({ eventId: event.event_id });
+            }
+            return event;
+        },
     });
 }
 
