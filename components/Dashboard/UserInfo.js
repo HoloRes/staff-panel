@@ -58,7 +58,7 @@ export default function UserInfo({userid}) {
 			const userNotesTwo = notes.slice(Math.ceil(notes.length / 2));
 
 			const userNotesOneHtml = userNotesOne.map((note) => (
-				<Card height="medium" width="medium" pad="small">
+				<Card height={{min: "medium", max: "large"}} width="medium" pad="small">
 					<Heading level='5' textAlign='center'>
 						Note #{note._id}
 						<hr style={{color: '#707070', opacity: '25%'}}/>
@@ -70,7 +70,7 @@ export default function UserInfo({userid}) {
 			));
 			setUserNotesOne(userNotesOneHtml);
 			const userNotesTwoHtml = userNotesTwo.map((note) => (
-				<Card height="medium" width="medium" pad="small">
+				<Card height={{min: "medium", max: "large"}} width="medium" pad="small">
 					<Heading level='5' textAlign='center'>
 						Note #{note._id}
 						<hr style={{color: '#707070', opacity: '25%'}}/>
@@ -88,7 +88,7 @@ export default function UserInfo({userid}) {
 			const logsTwo = logs.slice(Math.ceil(logs.length / 2));
 
 			const userLogsOneHtml = logsOne.map((log) => (
-				<Card height="medium" width="medium" pad="small">
+				<Card height={{min: "medium", max: "large"}} width="medium" pad="small">
 					<Heading level='5' textAlign='center'>
 						#{log._id} | {log.type}{(log.duration ? (" | " + log.duration) : "")}
 						<hr style={{color: '#707070', opacity: '25%'}}/>
@@ -104,7 +104,7 @@ export default function UserInfo({userid}) {
 			));
 			setUserLogsOne(userLogsOneHtml);
 			const userLogsTwoHtml = logsTwo.map((log) => (
-				<Card height="medium" width="medium" pad="small">
+				<Card height={{min: "medium", max: "large"}} width="medium" pad="small">
 					<Heading level='5' textAlign='center'>
 						#{log._id} | {log.type}{(log.duration ? (" | " + log.duration) : "")}
 						<hr style={{color: '#707070', opacity: '25%'}}/>
