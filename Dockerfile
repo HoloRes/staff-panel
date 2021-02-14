@@ -1,5 +1,9 @@
 FROM node:lts-alpine
 
+# Commit SHA for Sentry
+ARG sha
+ENV COMMIT_SHA=$sha
+
 # Create a folder for the bot
 WORKDIR /app
 COPY package.json .

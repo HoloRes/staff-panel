@@ -7,6 +7,15 @@ import ReactNotification from 'react-notifications-component'
 import Head from 'next/head';
 import {useState} from 'react';
 
+import * as Sentry from '@sentry/node';
+
+if (process.env.NEXT_PUBLIC_SENTRY_DSN) {
+    Sentry.init({
+        enabled: process.env.NODE_ENV === 'production',
+        dsn: process.env.NEXT_PUBLIC_SENTRY_DSN
+    });
+}
+
 const myTheme = {
     'name': 'Hololive Resistance - Staff dashboard',
     'rounding': 4,
@@ -106,7 +115,7 @@ const myTheme = {
     }
 }
 
-export default function App({Component, pageProps}) {
+export default function App({Component, pageProps, err}) {
     const [darkMode, setDarkMode] = useState(true);
 
     return (
@@ -123,7 +132,7 @@ export default function App({Component, pageProps}) {
             </Head>
             <Grommet full theme={myTheme} themeMode={darkMode ? 'dark' : 'light'}>
                 <ReactNotification />
-                <Component {...pageProps} darkMode={darkMode} setDarkMode={setDarkMode} />
+                <Component {...pageProps} darkMode={darkMode} setDarkMode={setDarkMode} err={err} />
             </Grommet>
         </Provider>
     )
