@@ -162,7 +162,7 @@ export default function Rules() {
                 </Paragraph>
                 <br/>  
             </Box>
-        )
-    </div>
+        </div>
+    )
 }
 
