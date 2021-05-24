@@ -22,7 +22,7 @@
     "grommet": "2.16.3",
     "grommet-icons": "4.5.0",
     "moment-timezone": "0.5.33",
-    "next": "10.0.7",
+    "next": "10.2.3",
     "next-auth": "3.11.2",
     "next-plugin-transpile-modules": "2.0.0",
     "parse-duration": "0.4.4",
